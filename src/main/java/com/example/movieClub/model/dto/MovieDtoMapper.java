@@ -11,8 +11,13 @@ public class MovieDtoMapper {
 //        return movieDto;
         return MovieDto.builder().name(movie.getName()).genre(movie.getGenre()).build();
     }
+
     public static List<MovieDto> entitiesToDtos(List<Movie> movies) {
         List<MovieDto> movieDtos = movies.stream().map(m -> entityToDto(m)).collect(Collectors.toList());
         return movieDtos;
+    }
+
+    public static Movie dtoToEntity(MovieDto movieDto) {
+        return Movie.builder().name(movieDto.getName()).genre(movieDto.getGenre()).build();
     }
 }
