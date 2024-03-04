@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 import static com.example.movieClub.model.dto.MovieDtoMapper.*;
 
@@ -32,10 +31,10 @@ public class MovieService {
     }
 
     public MovieDto getMovieById(Long id){
-        return entityToDto(findById(id));
+        return entityToDto(findMovieById(id));
     }
 
-    private Movie findById(Long id) {
+    private Movie findMovieById(Long id) {
         return movieRepository.findById(id).orElseThrow(() -> new RuntimeException("Movie with id = " + id + " not found"));
     }
 
@@ -50,11 +49,10 @@ public class MovieService {
     }
 
     public MovieDto updateMovie(MovieDto movieDto, Long id){
-        Movie movie = findById(id);
+        Movie movie = findMovieById(id);
         movie.setName(movieDto.getName());
         movie.setGenre(movieDto.getGenre());
-        movieRepository.save(movie);
-        return entityToDto(movie);
+        return entityToDto(movieRepository.save(movie));
     }
 
     public List<MovieDto> findByGenre(String genre){
@@ -62,7 +60,7 @@ public class MovieService {
     }
 
     public MovieCopyDto rentMovieCopy(Long movieId) {
-        Movie movie = findById(movieId);
+        Movie movie = findMovieById(movieId);
         MovieCopy availableCopy = findAvailableCopy(movie);
         User user = userService.findLoggedInUser();
         if (user.getRentedCopies().size() < 3) {
