@@ -9,7 +9,11 @@ public class MovieDtoMapper {
     public static MovieDto entityToDto(Movie movie) {
 //        MovieDto movieDto = MovieDto.builder().name(movie.getName()).genre(movie.getGenre()).build();
 //        return movieDto;
-        return MovieDto.builder().name(movie.getName()).genre(movie.getGenre()).build();
+        return MovieDto.builder()
+                .name(movie.getName())
+                .genre(movie.getGenre())
+//                .movieCopies(MovieCopyDtoMapper.entitiesToDto(movie.getMovieCopies()))
+                .build();
     }
 
     public static List<MovieDto> entitiesToDtos(List<Movie> movies) {

@@ -1,6 +1,7 @@
 package com.example.movieClub.controller;
 
 import com.example.movieClub.model.Movie;
+import com.example.movieClub.model.dto.MovieCopyDto;
 import com.example.movieClub.model.dto.MovieDto;
 import com.example.movieClub.service.MovieService;
 import lombok.AllArgsConstructor;
@@ -44,4 +45,11 @@ public class MovieController {
     public List<MovieDto> getByGenre(@RequestParam String genre) {
         return movieService.findByGenre(genre);
     }
+
+    @PutMapping("/rent/{id}")
+    public MovieCopyDto rentMovieCopy(@PathVariable Long id) {
+        return movieService.rentMovieCopy(id);
+    }
+
+
 }
