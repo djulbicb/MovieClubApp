@@ -46,7 +46,7 @@ class MovieServiceTest {
 
     @Test
     public void shouldGetAllMovies() {
-        List<Movie> movies = List.of(movieBuilder("Harry Potter"), movieBuilder("LOTR"));
+        List<Movie> movies = List.of(movieBuilder("Harry Potter", "Fantasy"), movieBuilder("LOTR", "Fantasy"));
         when(movieRepository.findAll()).thenReturn(movies);
 
         assertThat(movieService.getMovies()).isEqualTo(entitiesToDtos(movies));
@@ -54,7 +54,7 @@ class MovieServiceTest {
 
     @Test
     public void shouldGetMovieById() {
-        Movie movie = movieBuilder("Harry Potter");
+        Movie movie = movieBuilder("Harry Potter", "Fantasy");
         when(movieRepository.findById(1l)).thenReturn(Optional.of(movie));
 
         assertThat(movieService.getMovieById(1l)).isEqualTo(entityToDto(movie));
@@ -68,14 +68,14 @@ class MovieServiceTest {
 
     @Test
     public void shouldCreateMovie() {
-        Movie movie = movieBuilder("Harry Potter");
+        Movie movie = movieBuilder("Harry Potter", "Fantasy");
         when(movieRepository.save(movie)).thenReturn(movie);
         assertThat(movieService.createMovie(entityToDto(movie))).isEqualTo(entityToDto(movie));
     }
 
     @Test
     public void shouldUpdateMovie() {
-        Movie movie = movieBuilder("Harry Potter");
+        Movie movie = movieBuilder("Harry Potter", "Fantasy");
         when(movieRepository.findById(1l)).thenReturn(Optional.ofNullable(movie));
         MovieDto movieDto = MovieDto.builder().name("LOTR").build();
         when(movieRepository.save(movie)).thenReturn(movie);
@@ -84,7 +84,7 @@ class MovieServiceTest {
 
     @Test
     public void shouldRentMovieCopy() {
-        Movie movie = movieBuilder("Harry Potter");
+        Movie movie = movieBuilder("Harry Potter", "Fantasy");
         when(movieRepository.findById(1l)).thenReturn(Optional.ofNullable(movie));
         MovieCopy movieCopy = MovieCopy.builder().copyNumber(1).movie(movie).build();
         movie.setMovieCopies(List.of(movieCopy));
@@ -93,5 +93,15 @@ class MovieServiceTest {
         user.setRentedCopies(List.of());
         when(movieCopyRepository.save(movieCopy)).thenReturn(movieCopy);
         assertThat(movieService.rentMovieCopy(1l)).isEqualTo(MovieCopyDtoMapper.entityToDto(movieCopy));
+    }
+
+    @Test
+    public void shouldFindByGenre() {
+//        String genre = "Fantasy";
+        Movie movie1 = movieBuilder("Dune", "Fantasy");
+        Movie movie2 = movieBuilder("Harry Potter", "Fantasy");
+        List<Movie> movies = List.of(movie1, movie2);
+        when(movieRepository.findByGenreOrderByNameAsc("Fantasy")).thenReturn(movies);
+        assertThat(movieService.findByGenre("Fantasy")).isEqualTo(entitiesToDtos(movies));
     }
 }

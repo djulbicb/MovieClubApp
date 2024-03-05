@@ -11,4 +11,12 @@ public class UserDtoMapper {
                 .email(userDto.getEmail())
                 .password(userDto.getPassword()).build();
     }
+
+    public static UserDto entityToDto(User user) {
+        return UserDto.builder()
+                .name(user.getName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .password(user.getPassword()).build();
+    }
 }
