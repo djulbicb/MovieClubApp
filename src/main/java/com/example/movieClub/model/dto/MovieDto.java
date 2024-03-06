@@ -11,5 +11,4 @@ import java.util.List;
 public class MovieDto {
     private String name;
     private String genre;
-//    private List<MovieCopyDto> movieCopies;
 }

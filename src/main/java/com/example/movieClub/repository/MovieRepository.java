@@ -8,7 +8,6 @@ import java.util.List;
 
 @Repository
 public interface MovieRepository extends JpaRepository<Movie, Long> {
-    //metoda za cuvanje u bazu
     public List<Movie> findByGenreOrderByNameAsc(String genre);
     public List<Movie> findByNameAndGenre(String name, String genre);
 }

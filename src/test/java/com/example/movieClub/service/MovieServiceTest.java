@@ -97,7 +97,6 @@ class MovieServiceTest {
 
     @Test
     public void shouldFindByGenre() {
-//        String genre = "Fantasy";
         Movie movie1 = movieBuilder("Dune", "Fantasy");
         Movie movie2 = movieBuilder("Harry Potter", "Fantasy");
         List<Movie> movies = List.of(movie1, movie2);

@@ -7,13 +7,9 @@ import java.util.stream.Collectors;
 
 public class MovieDtoMapper {
     public static MovieDto entityToDto(Movie movie) {
-//        MovieDto movieDto = MovieDto.builder().name(movie.getName()).genre(movie.getGenre()).build();
-//        return movieDto;
         return MovieDto.builder()
                 .name(movie.getName())
-                .genre(movie.getGenre())
-//                .movieCopies(MovieCopyDtoMapper.entitiesToDto(movie.getMovieCopies()))
-                .build();
+                .genre(movie.getGenre()).build();
     }
 
     public static List<MovieDto> entitiesToDtos(List<Movie> movies) {

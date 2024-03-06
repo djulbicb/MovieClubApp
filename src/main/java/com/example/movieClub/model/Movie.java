@@ -20,8 +20,6 @@ public class Movie {
     private Long id;
     private String name;
     private String genre;
-    //zapisi u dokumentu svom objasnjenje
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    //kada se brise film brisu se i sve njegove kopije
     private List<MovieCopy> movieCopies;
 }

@@ -8,15 +8,9 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 @RequestMapping("/movieCopies")
 @RestController
-//@RestController vs @Controller???
 public class MovieCopyController {
 
     private final MovieCopyService movieCopyService;
-
-    @PostMapping
-    public MovieCopyDto createCopy(@RequestBody MovieCopyDto movieCopyDto) {
-        return movieCopyService.createMovieCopy(movieCopyDto);
-    }
 
     @PutMapping("/{id}")
     public MovieCopyDto returnMovieCopy(@PathVariable Long id) {
