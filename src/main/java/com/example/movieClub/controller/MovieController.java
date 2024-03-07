@@ -1,11 +1,9 @@
 package com.example.movieClub.controller;
 
-import com.example.movieClub.model.Movie;
 import com.example.movieClub.model.dto.MovieCopyDto;
 import com.example.movieClub.model.dto.MovieDto;
 import com.example.movieClub.service.MovieService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -50,6 +48,5 @@ public class MovieController {
     public MovieCopyDto rentMovieCopy(@PathVariable Long id) {
         return movieService.rentMovieCopy(id);
     }
-
 
 }
