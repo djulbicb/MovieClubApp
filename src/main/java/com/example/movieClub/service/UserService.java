@@ -14,9 +14,9 @@ public class UserService {
     private final UserRepository userRepository;
     public User findLoggedInUser() {
         return User.builder()
-                .name("Dora")
-                .lastName("Bra")
-                .email("dora@gmail.com")
+                .name("Isidora")
+                .lastName("Brasancevic")
+                .email("isidorabr@gmail.com")
                 .build();
     }
 
