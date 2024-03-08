@@ -1,5 +1,8 @@
 package com.example.movieClub.service;
 
+import com.example.movieClub.exception.EntityNotFoundException;
+import com.example.movieClub.exception.NoAvailableCopiesException;
+import com.example.movieClub.exception.TooManyCopiesRentedException;
 import com.example.movieClub.model.Movie;
 import com.example.movieClub.model.MovieCopy;
 import com.example.movieClub.model.User;
@@ -23,6 +26,8 @@ public class MovieService {
     private final MovieCopyRepository movieCopyRepository;
     private final UserService userService;
 
+    private static final int ALLOWED_NUMBER_OF_COPIES = 3;
+
     public List<MovieDto> getMovies() {
         List<Movie> movies = movieRepository.findAll();
         List<MovieDto> movieDtoList = entitiesToDtos(movies);
@@ -35,7 +40,7 @@ public class MovieService {
     }
 
     private Movie findMovieById(Long id) {
-        return movieRepository.findById(id).orElseThrow(() -> new RuntimeException("Movie with id = " + id + " not found"));
+        return movieRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Movie with id = " + id + " not found"));
     }
 
     public void deleteMovieById(Long id){
@@ -63,12 +68,12 @@ public class MovieService {
         Movie movie = findMovieById(movieId);
         MovieCopy availableCopy = findAvailableCopy(movie);
         User user = userService.findLoggedInUser();
-        if (user.getRentedCopies().size() < 3) {
+        if (user.getRentedCopies().size() < ALLOWED_NUMBER_OF_COPIES) {
             availableCopy.setRentalDate(LocalDate.now());
             availableCopy.setUser(user);
         }
         else {
-            throw new RuntimeException("User already has more than 2 copies rented.");
+            throw new TooManyCopiesRentedException("User already has" + ALLOWED_NUMBER_OF_COPIES + " copies rented.");
         }
         MovieCopy savedMovieCopy = movieCopyRepository.save(availableCopy);
         return MovieCopyDtoMapper.entityToDto(savedMovieCopy);
@@ -76,7 +81,7 @@ public class MovieService {
 
     private MovieCopy findAvailableCopy(Movie movie) {
         return movie.getMovieCopies().stream().filter(movieCopy -> isAvailable(movieCopy))
-                .findFirst().orElseThrow(() -> new RuntimeException("There are no available copies for movie " + movie.getName()));
+                .findFirst().orElseThrow(() -> new NoAvailableCopiesException("There are no available copies for movie " + movie.getName()));
     }
 
     private boolean isAvailable(MovieCopy movieCopy) {
