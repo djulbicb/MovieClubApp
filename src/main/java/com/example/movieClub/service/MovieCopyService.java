@@ -1,5 +1,6 @@
 package com.example.movieClub.service;
 
+import com.example.movieClub.exception.EntityNotFoundException;
 import com.example.movieClub.model.Movie;
 import com.example.movieClub.model.MovieCopy;
 import com.example.movieClub.model.dto.MovieCopyDto;
@@ -20,7 +21,7 @@ public class MovieCopyService {
     private final MovieRepository movieRepository;
 
     public MovieCopyDto returnMovieCopy(Long id) {
-        MovieCopy movieCopy = movieCopyRepository.findById(id).orElseThrow(() -> new RuntimeException("There is no copy with id " + id));
+        MovieCopy movieCopy = movieCopyRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Movie copy with id = " + id + " not found"));
         movieCopy.setRentalDate(null);
         movieCopy.setUser(null);
         return MovieCopyDtoMapper.entityToDto(movieCopyRepository.save(movieCopy));
