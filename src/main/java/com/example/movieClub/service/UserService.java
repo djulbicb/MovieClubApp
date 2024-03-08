@@ -1,5 +1,6 @@
 package com.example.movieClub.service;
 
+import com.example.movieClub.exception.EntityNotFoundException;
 import com.example.movieClub.model.User;
 import com.example.movieClub.model.dto.UserDto;
 import com.example.movieClub.repository.UserRepository;
@@ -52,6 +53,6 @@ public class UserService {
     }
 
     private User findUserById(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User with id = " + id + " not found"));
+        return userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User with id = " + id + " not found"));
     }
 }
