@@ -17,7 +17,7 @@ import java.time.LocalDate;
 
 public class MovieCopy {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private int copyNumber;
     private LocalDate rentalDate;
