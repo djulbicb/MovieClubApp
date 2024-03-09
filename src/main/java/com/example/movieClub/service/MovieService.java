@@ -73,7 +73,7 @@ public class MovieService {
             availableCopy.setUser(user);
         }
         else {
-            throw new TooManyCopiesRentedException("User already has" + ALLOWED_NUMBER_OF_COPIES + " copies rented.");
+            throw new TooManyCopiesRentedException("User already has " + ALLOWED_NUMBER_OF_COPIES + " copies rented.");
         }
         MovieCopy savedMovieCopy = movieCopyRepository.save(availableCopy);
         return MovieCopyDtoMapper.entityToDto(savedMovieCopy);

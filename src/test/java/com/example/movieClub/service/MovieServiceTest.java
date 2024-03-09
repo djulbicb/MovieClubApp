@@ -1,6 +1,7 @@
 package com.example.movieClub.service;
 
 import com.example.movieClub.MovieTestData;
+import com.example.movieClub.exception.TooManyCopiesRentedException;
 import com.example.movieClub.model.Movie;
 import com.example.movieClub.model.MovieCopy;
 import com.example.movieClub.model.User;
@@ -93,6 +94,23 @@ class MovieServiceTest {
         user.setRentedCopies(List.of());
         when(movieCopyRepository.save(movieCopy)).thenReturn(movieCopy);
         assertThat(movieService.rentMovieCopy(1l)).isEqualTo(MovieCopyDtoMapper.entityToDto(movieCopy));
+    }
+
+    @Test
+    public void shouldRentMovieCopyException() {
+        Movie movie = movieBuilder("Harry Potter", "Fantasy");
+        when(movieRepository.findById(1l)).thenReturn(Optional.ofNullable(movie));
+        MovieCopy movieCopy1 = MovieCopy.builder().copyNumber(1).movie(movie).build();
+        MovieCopy movieCopy2 = MovieCopy.builder().copyNumber(2).movie(movie).build();
+        MovieCopy movieCopy3 = MovieCopy.builder().copyNumber(3).movie(movie).build();
+
+        movie.setMovieCopies(List.of(movieCopy1, movieCopy2, movieCopy3));
+        User user = User.builder().name("Isidora").build();
+        when(userService.findLoggedInUser()).thenReturn(user);
+        user.setRentedCopies(List.of(movieCopy1, movieCopy2, movieCopy3));
+        assertThrows(TooManyCopiesRentedException.class, () -> {
+            movieService.rentMovieCopy(1L);
+        });
     }
 
     @Test

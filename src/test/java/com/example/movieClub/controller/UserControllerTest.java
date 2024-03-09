@@ -26,6 +26,7 @@ import static com.example.movieClub.model.dto.UserDtoMapper.entityToDto;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
@@ -50,9 +51,10 @@ public class UserControllerTest {
         UserDto userDto = UserDtoMapper.entityToDto(user);
         when(userService.createUser(userDto)).thenReturn(userDto);
         mockMvc.perform(post("/user")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(toJson(userDto)))
-                .andExpect(status().isOk());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(userDto)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Dora"));
     }
 
     @Test
@@ -62,7 +64,10 @@ public class UserControllerTest {
         List<User> users = List.of(user1, user2);
         when(userService.getUsers()).thenReturn(entitiesToDtos(users));
         mockMvc.perform(
-                get("/user/allUsers"))
+                get("/user/allUsers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(entitiesToDtos(users))))
+                .andExpect(jsonPath("$[1].name").value("Mina"))
                 .andExpect(status().isOk());
     }
 
@@ -71,8 +76,11 @@ public class UserControllerTest {
         User user = userBuilder("Dora", "dora@gmail.com");
         when(userService.getUserById(1L)).thenReturn(entityToDto(user));
         mockMvc.perform(
-                get("/user/1"))
-                .andExpect(status().isOk());
+                get("/user/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(entityToDto(user))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Dora"));
     }
 
     @Test
@@ -81,9 +89,10 @@ public class UserControllerTest {
         UserDto userDto = UserDtoMapper.entityToDto(user);
         when(userService.updateUser(userDto, 1L)).thenReturn(userDto);
         mockMvc.perform(put("/user/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(toJson(userDto)))
-                .andExpect(status().isOk());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(userDto)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Dora"));
         verify(userService, Mockito.times(1)).updateUser(userDto, 1L);
     }
 

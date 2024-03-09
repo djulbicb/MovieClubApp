@@ -58,8 +58,11 @@ public class MovieControllerTest {
         List<Movie> movies = List.of(movie1, movie2);
         when(movieService.getMovies()).thenReturn(entitiesToDtos(movies));
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/movies/allMovies"))
-                .andExpect(status().isOk());
+                MockMvcRequestBuilders.get("/movies/allMovies")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(entitiesToDtos(movies))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.[1].name").value("Dune"));
     }
 
     @Test
@@ -67,8 +70,11 @@ public class MovieControllerTest {
         Movie movie = movieBuilder("Harry Potter", "Fantasy");
         when(movieService.getMovieById(1L)).thenReturn(entityToDto(movie));
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/movies/1"))
-                .andExpect(status().isOk());
+                MockMvcRequestBuilders.get("/movies/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(entityToDto(movie))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.genre").value("Fantasy"));
     }
 
     @Test
@@ -86,7 +92,8 @@ public class MovieControllerTest {
         mockMvc.perform(post("/movies")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(movieDto)))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.genre").value("Fantasy"));
     }
 
     @Test
@@ -97,7 +104,8 @@ public class MovieControllerTest {
         mockMvc.perform(put("/movies/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(movieDto)))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.genre").value("Fantasy"));
         verify(movieService, Mockito.times(1)).updateMovie(movieDto, 1L);
     }
 
@@ -108,8 +116,11 @@ public class MovieControllerTest {
         List<Movie> movies = List.of(movie1, movie2);
         when(movieService.findByGenre("Fantasy")).thenReturn(entitiesToDtos(movies));
         mockMvc.perform(
-                get("/movies/moviesByGenre?genre=Fantasy"))
-                .andExpect(status().isOk());
+                get("/movies/moviesByGenre?genre=Fantasy")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(movies)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.[1].name").value("Dune"));
     }
 
     @Test
@@ -121,7 +132,7 @@ public class MovieControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(MovieCopyDtoMapper.entityToDto(movieCopy))))
                 .andExpect(status().isOk())
-                        .andExpect((jsonPath("$.copyNumber").value(3)));
+                .andExpect(jsonPath("$.copyNumber").value(3));
         verify(movieService, Mockito.times(1)).rentMovieCopy(1L);
     }
 
