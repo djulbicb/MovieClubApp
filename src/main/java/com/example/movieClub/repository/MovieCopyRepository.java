@@ -13,6 +13,6 @@ import java.util.List;
 public interface MovieCopyRepository extends JpaRepository<MovieCopy, Long> {
 
     @Query("SELECT copy from MovieCopy copy WHERE copy.rentalDate IS NOT NULL AND " +
-            "copy.rentalDate <= :date")
+            "copy.rentalDate = :date")
     public List<MovieCopy> findCopiesWithOverdueRentalDate(@Param("date") LocalDate date);
 }

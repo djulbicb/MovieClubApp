@@ -1,21 +1,28 @@
 package com.example.movieClub.service;
 
-import com.example.movieClub.model.MovieCopy;
-import com.example.movieClub.model.User;
-import com.example.movieClub.repository.MovieCopyRepository;
-import com.example.movieClub.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class EmailReminderService {
 
-    private final MovieCopyRepository movieCopyRepository;
+    private final JavaMailSender javaMailSender;
 
+    @RabbitListener(queues = "emailQueue")
+    public void sendReminderEmails(String email) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("adore.nails.ns@gmail.com");
+        message.setTo(email);
+        message.setSubject("Please return overdue movie rental");
+        message.setText("Your movie rental is overdue, please return it at your earliest convenience.");
 
+        javaMailSender.send(message);
+        log.info("Email successfully sent.");
+    }
 }

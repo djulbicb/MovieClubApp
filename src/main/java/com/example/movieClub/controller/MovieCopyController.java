@@ -1,6 +1,5 @@
 package com.example.movieClub.controller;
 
-import com.example.movieClub.model.User;
 import com.example.movieClub.model.dto.MovieCopyDto;
 import com.example.movieClub.model.dto.UserDto;
 import com.example.movieClub.service.MovieCopyService;
@@ -26,8 +25,9 @@ public class MovieCopyController {
         return movieCopyService.getUsersWithOverdueRentals();
     }
 
+    //for testing purpose
     @PostMapping("/sendEmail")
     public void sendEmail() {
-        movieCopyService.sendReminderEmails();
+        movieCopyService.sendOverdueRentalUsersToQueue();
     }
 }
