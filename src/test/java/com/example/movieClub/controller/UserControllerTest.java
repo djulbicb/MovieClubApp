@@ -1,6 +1,5 @@
 package com.example.movieClub.controller;
 
-import com.example.movieClub.MovieTestData;
 import com.example.movieClub.model.User;
 import com.example.movieClub.model.dto.UserDto;
 import com.example.movieClub.model.dto.UserDtoMapper;
@@ -17,7 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.io.IOException;
 import java.util.List;
 
 import static com.example.movieClub.MovieTestData.userBuilder;
@@ -41,7 +39,7 @@ public class UserControllerTest {
     private MockMvc mockMvc;
 
     @BeforeEach
-    public void setUp() throws IOException {
+    public void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
     }
 

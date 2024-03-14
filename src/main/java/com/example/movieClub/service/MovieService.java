@@ -68,7 +68,7 @@ public class MovieService {
         Movie movie = findMovieById(movieId);
         MovieCopy availableCopy = findAvailableCopy(movie);
         User user = userService.findLoggedInUser();
-        if (user.getRentedCopies().size() < ALLOWED_NUMBER_OF_COPIES) {
+        if (user.getRentedCopies() == null || user.getRentedCopies().size() < ALLOWED_NUMBER_OF_COPIES) {
             availableCopy.setRentalDate(LocalDate.now());
             availableCopy.setUser(user);
         }
