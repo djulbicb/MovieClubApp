@@ -23,6 +23,7 @@ import static com.example.movieClub.model.dto.MovieCopyDtoMapper.entityToDto;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
@@ -47,9 +48,10 @@ public class MovieCopyControllerTest {
         MovieCopy movieCopy = MovieTestData.movieCopyBuilder(3, movie);
         when(movieCopyService.returnMovieCopy(1L)).thenReturn(entityToDto(movieCopy));
         mockMvc.perform(put("/movieCopies/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(toJson(entityToDto(movieCopy))))
-                .andExpect(status().isOk());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(entityToDto(movieCopy))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.copyNumber").value(3));
         verify(movieCopyService, Mockito.times(1)).returnMovieCopy(1L);
     }
 

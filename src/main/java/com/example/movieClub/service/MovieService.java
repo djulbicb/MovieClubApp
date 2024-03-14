@@ -68,12 +68,12 @@ public class MovieService {
         Movie movie = findMovieById(movieId);
         MovieCopy availableCopy = findAvailableCopy(movie);
         User user = userService.findLoggedInUser();
-        if (user.getRentedCopies().size() < ALLOWED_NUMBER_OF_COPIES) {
+        if (user.getRentedCopies() == null || user.getRentedCopies().size() < ALLOWED_NUMBER_OF_COPIES) {
             availableCopy.setRentalDate(LocalDate.now());
             availableCopy.setUser(user);
         }
         else {
-            throw new TooManyCopiesRentedException("User already has" + ALLOWED_NUMBER_OF_COPIES + " copies rented.");
+            throw new TooManyCopiesRentedException("User already has " + ALLOWED_NUMBER_OF_COPIES + " copies rented.");
         }
         MovieCopy savedMovieCopy = movieCopyRepository.save(availableCopy);
         return MovieCopyDtoMapper.entityToDto(savedMovieCopy);

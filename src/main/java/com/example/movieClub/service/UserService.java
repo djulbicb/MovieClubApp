@@ -17,11 +17,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     public User findLoggedInUser() {
-        return User.builder()
-                .name("Isidora")
-                .lastName("Brasancevic")
-                .email("isidorabr@gmail.com")
-                .build();
+        return findUserById(3l);
     }
 
     public UserDto createUser(UserDto userDto) {
