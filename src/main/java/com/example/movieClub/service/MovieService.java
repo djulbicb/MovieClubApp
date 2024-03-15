@@ -79,6 +79,13 @@ public class MovieService {
         return MovieCopyDtoMapper.entityToDto(savedMovieCopy);
     }
 
+    public int getNumOfAvailableCopies(Long movieId) {
+        Movie movie = findMovieById(movieId);
+        List<MovieCopy> availableCopies = movie.getMovieCopies().stream()
+                .filter(movieCopy -> isAvailable(movieCopy)).toList();
+        return availableCopies.size();
+    }
+
     private MovieCopy findAvailableCopy(Movie movie) {
         return movie.getMovieCopies().stream().filter(movieCopy -> isAvailable(movieCopy))
                 .findFirst().orElseThrow(() -> new NoAvailableCopiesException("There are no available copies for movie " + movie.getName()));
