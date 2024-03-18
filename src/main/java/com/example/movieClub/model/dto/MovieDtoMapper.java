@@ -8,8 +8,12 @@ import java.util.stream.Collectors;
 public class MovieDtoMapper {
     public static MovieDto entityToDto(Movie movie) {
         return MovieDto.builder()
+                .id(movie.getId())
                 .name(movie.getName())
-                .genre(movie.getGenre()).build();
+                .genre(movie.getGenre())
+                .description(movie.getDescription())
+                .imageUrl(movie.getImageUrl())
+                .year(movie.getYear()).build();
     }
 
     public static List<MovieDto> entitiesToDtos(List<Movie> movies) {
@@ -18,6 +22,10 @@ public class MovieDtoMapper {
     }
 
     public static Movie dtoToEntity(MovieDto movieDto) {
-        return Movie.builder().name(movieDto.getName()).genre(movieDto.getGenre()).build();
+        return Movie.builder().name(movieDto.getName())
+                .genre(movieDto.getGenre())
+                .year(movieDto.getYear())
+                .description(movieDto.getDescription())
+                .imageUrl(movieDto.getImageUrl()).build();
     }
 }

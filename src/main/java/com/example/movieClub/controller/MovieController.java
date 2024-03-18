@@ -50,4 +50,8 @@ public class MovieController {
         return movieService.rentMovieCopy(id);
     }
 
+    @GetMapping("/availableCopies/{id}")
+    public int getNumOfAvailableCopies(@PathVariable Long id) {
+        return movieService.getNumOfAvailableCopies(id);
+    }
 }

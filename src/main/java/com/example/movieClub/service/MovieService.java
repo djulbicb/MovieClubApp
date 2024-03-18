@@ -55,8 +55,12 @@ public class MovieService {
 
     public MovieDto updateMovie(MovieDto movieDto, Long id){
         Movie movie = findMovieById(id);
+        movie.setId(movieDto.getId());
         movie.setName(movieDto.getName());
         movie.setGenre(movieDto.getGenre());
+        movie.setYear(movieDto.getYear());
+        movie.setDescription(movieDto.getDescription());
+        movie.setImageUrl(movieDto.getImageUrl());
         return entityToDto(movieRepository.save(movie));
     }
 
@@ -77,6 +81,13 @@ public class MovieService {
         }
         MovieCopy savedMovieCopy = movieCopyRepository.save(availableCopy);
         return MovieCopyDtoMapper.entityToDto(savedMovieCopy);
+    }
+
+    public int getNumOfAvailableCopies(Long movieId) {
+        Movie movie = findMovieById(movieId);
+        List<MovieCopy> availableCopies = movie.getMovieCopies().stream()
+                .filter(movieCopy -> isAvailable(movieCopy)).toList();
+        return availableCopies.size();
     }
 
     private MovieCopy findAvailableCopy(Movie movie) {
