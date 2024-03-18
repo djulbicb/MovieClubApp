@@ -55,8 +55,12 @@ public class MovieService {
 
     public MovieDto updateMovie(MovieDto movieDto, Long id){
         Movie movie = findMovieById(id);
+        movie.setId(movieDto.getId());
         movie.setName(movieDto.getName());
         movie.setGenre(movieDto.getGenre());
+        movie.setYear(movieDto.getYear());
+        movie.setDescription(movieDto.getDescription());
+        movie.setImageUrl(movieDto.getImageUrl());
         return entityToDto(movieRepository.save(movie));
     }
 
