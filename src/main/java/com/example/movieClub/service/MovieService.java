@@ -12,10 +12,13 @@ import com.example.movieClub.model.dto.MovieDto;
 import com.example.movieClub.repository.MovieCopyRepository;
 import com.example.movieClub.repository.MovieRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.example.movieClub.model.dto.MovieDtoMapper.*;
 
@@ -34,6 +37,15 @@ public class MovieService {
 
         return movieDtoList;
     }
+
+    public List<MovieDto> getMovies(Pageable pageable) {
+        Page<Movie> moviePage = movieRepository.findAll(pageable);
+        List<MovieDto> movieDtoList = moviePage.getContent().stream()
+                .map(movie -> entityToDto(movie))
+                .collect(Collectors.toList());
+        return movieDtoList;
+    }
+
 
     public MovieDto getMovieById(Long id){
         return entityToDto(findMovieById(id));
