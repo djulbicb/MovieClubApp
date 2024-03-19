@@ -4,9 +4,15 @@ import com.example.movieClub.model.dto.MovieCopyDto;
 import com.example.movieClub.model.dto.MovieDto;
 import com.example.movieClub.service.MovieService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @RestController
@@ -16,8 +22,15 @@ public class MovieController {
     private final MovieService movieService;
 
     @GetMapping("/allMovies")
-    public List<MovieDto> getAll() {
-        return movieService.getMovies();
+    public ResponseEntity<Map<String, Object>> getAll(@PageableDefault(page = 1, size = 2) Pageable pageable) {//        return movieService.getMovies(pageable);
+        List<MovieDto> movies = movieService.getMovies(pageable);
+        long totalCount = movieService.getMovies().size();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("movies", movies);
+        response.put("totalCount", totalCount);
+
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/{id}")
