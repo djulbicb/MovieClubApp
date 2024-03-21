@@ -22,7 +22,7 @@ public class MovieController {
     private final MovieService movieService;
 
     @GetMapping("/allMovies")
-    public ResponseEntity<Map<String, Object>> getAll(@PageableDefault(page = 1, size = 2) Pageable pageable) {//        return movieService.getMovies(pageable);
+    public ResponseEntity<Map<String, Object>> getAll(@PageableDefault(page = 1, size = 2) Pageable pageable) {
         List<MovieDto> movies = movieService.getMovies(pageable);
         long totalCount = movieService.getMovies().size();
 
