@@ -1,12 +1,11 @@
 package com.example.movieClub.service;
 
-import com.example.movieClub.model.User;
-import com.example.movieClub.model.dto.UserDto;
-import com.example.movieClub.model.dto.UserDtoMapper;
+import com.example.movieClub.model.Movie;
+import com.example.movieClub.model.dto.MovieDto;
+import com.example.movieClub.model.dto.MovieDtoMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.jdbc.Sql;
@@ -15,18 +14,16 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static com.example.movieClub.MovieTestData.userBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Testcontainers
 @SpringBootTest
 @Sql(value = "/data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
-public class UserServiceIntegrationTest {
+public class MovieServiceIntegrationTest {
 
     @Autowired
-    private UserService userService;
+    private MovieService movieService;
 
     @Container
     static MySQLContainer mySQLContainer = new MySQLContainer("mysql:latest");
@@ -40,27 +37,27 @@ public class UserServiceIntegrationTest {
     }
 
     @Test
-    void shouldCreateUser() {
-        User user = userBuilder("Mica", "mica@gmail.com");
-        UserDto userDto = UserDtoMapper.entityToDto(user);
-        userService.createUser(userDto);
-        List<UserDto> userDtoList = userService.getUsers();
-        assertThat(userDtoList.size()).isEqualTo(3);
-        assertThat(userDtoList).contains(userDto);
+    void shouldGetMovies() {
+        List<MovieDto> movieDtos = movieService.getMovies();
+        assertThat(movieDtos.size()).isEqualTo(2);
+        assertThat(movieDtos.get(0).getName()).isEqualTo("Dune");
     }
 
     @Test
-    void shouldDeleteUser() {
-        userService.deleteUserById(1l);
-        List<UserDto> userDtoList = userService.getUsers();
-        assertThat(userDtoList.size()).isEqualTo(2);
-        assertThat(userDtoList.stream().map(userDto -> userDto.getEmail()).collect(Collectors.toList())).doesNotContain("tea@gmail.com");
+    void shouldCreateMovie() {
+        Movie movie = Movie.builder().name("Fight Club").year(2005).build();
+        MovieDto movieDto = MovieDtoMapper.entityToDto(movie);
+        movieService.createMovie(movieDto);
+        List<MovieDto> movieDtos = movieService.getMovies();
+        assertThat(movieDtos.size()).isEqualTo(3);
+        assertThat(movieDtos.get(2).getName()).isEqualTo(movie.getName());
     }
 
     @Test
-    void shouldGetUsers() {
-        List<UserDto> userDtoList = userService.getUsers();
-        assertThat(userDtoList.size()).isEqualTo(2);
+    void shouldDeleteMovieById() {
+        movieService.deleteMovieById(1l);
+        List<MovieDto> movieDtos = movieService.getMovies();
+        assertThat(movieDtos.size()).isEqualTo(2);
+        assertThat(movieDtos.get(0).getName()).isEqualTo("Avatar");
     }
-
 }
