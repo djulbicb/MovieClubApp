@@ -1,12 +1,9 @@
 package com.example.movieClub.controller;
 
-import com.example.movieClub.MovieTestData;
 import com.example.movieClub.model.Movie;
 import com.example.movieClub.model.MovieCopy;
-import com.example.movieClub.model.dto.MovieCopyDto;
 import com.example.movieClub.model.dto.MovieCopyDtoMapper;
 import com.example.movieClub.model.dto.MovieDto;
-import com.example.movieClub.model.dto.MovieDtoMapper;
 import com.example.movieClub.service.MovieService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,21 +13,20 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.io.IOException;
 import java.util.List;
 
 import static com.example.movieClub.MovieTestData.movieBuilder;
 import static com.example.movieClub.MovieTestData.movieCopyBuilder;
 import static com.example.movieClub.model.dto.MovieDtoMapper.entitiesToDtos;
 import static com.example.movieClub.model.dto.MovieDtoMapper.entityToDto;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -48,7 +44,9 @@ public class MovieControllerTest {
 
     @BeforeEach
     public void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(movieController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(movieController)
+                .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
+                .build();
     }
 
     @Test
@@ -56,13 +54,19 @@ public class MovieControllerTest {
         Movie movie1 = movieBuilder("Harry Potter", "Fantasy");
         Movie movie2 = movieBuilder("Dune", "Fantasy");
         List<Movie> movies = List.of(movie1, movie2);
+        when(movieService.getMovies(PageRequest.of(1, 2))).thenReturn(entitiesToDtos(movies));
         when(movieService.getMovies()).thenReturn(entitiesToDtos(movies));
-        mockMvc.perform(
-                MockMvcRequestBuilders.get("/movies/allMovies")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(entitiesToDtos(movies))))
+
+        mockMvc.perform(get("/movies/allMovies")
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.[1].name").value("Dune"));
+                .andExpect(jsonPath("$.movies").isArray())
+                .andExpect(jsonPath("$.movies.length()").value(2))
+                .andExpect(jsonPath("$.movies[0].name").value("Harry Potter"))
+                .andExpect(jsonPath("$.movies[0].genre").value("Fantasy"))
+                .andExpect(jsonPath("$.movies[1].name").value("Dune"))
+                .andExpect(jsonPath("$.movies[1].genre").value("Fantasy"))
+                .andExpect(jsonPath("$.totalCount").value(2));
     }
 
     @Test
