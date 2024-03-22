@@ -55,7 +55,7 @@ public class MovieControllerTest {
         Movie movie2 = movieBuilder("Dune", "Fantasy");
         List<Movie> movies = List.of(movie1, movie2);
         when(movieService.getMovies(PageRequest.of(1, 2))).thenReturn(entitiesToDtos(movies));
-        when(movieService.getMovies()).thenReturn(entitiesToDtos(movies));
+        when(movieService.countMovies()).thenReturn((long) movies.size());
 
         mockMvc.perform(get("/movies/allMovies")
                 .contentType(MediaType.APPLICATION_JSON))

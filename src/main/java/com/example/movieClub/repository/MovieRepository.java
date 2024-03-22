@@ -10,4 +10,5 @@ import java.util.List;
 public interface MovieRepository extends JpaRepository<Movie, Long> {
     public List<Movie> findByGenreOrderByNameAsc(String genre);
     public List<Movie> findByNameAndGenre(String name, String genre);
+    public long count();
 }

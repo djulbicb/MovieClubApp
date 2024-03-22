@@ -102,6 +102,10 @@ public class MovieService {
         return availableCopies.size();
     }
 
+    public long countMovies() {
+        return movieRepository.count();
+    }
+
     private MovieCopy findAvailableCopy(Movie movie) {
         return movie.getMovieCopies().stream().filter(movieCopy -> isAvailable(movieCopy))
                 .findFirst().orElseThrow(() -> new NoAvailableCopiesException("There are no available copies for movie " + movie.getName()));

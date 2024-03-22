@@ -1,5 +1,6 @@
 package com.example.movieClub.controller;
 
+import com.example.movieClub.model.MovieResponse;
 import com.example.movieClub.model.dto.MovieCopyDto;
 import com.example.movieClub.model.dto.MovieDto;
 import com.example.movieClub.service.MovieService;
@@ -22,15 +23,13 @@ public class MovieController {
     private final MovieService movieService;
 
     @GetMapping("/allMovies")
-    public ResponseEntity<Map<String, Object>> getAll(@PageableDefault(page = 1, size = 2) Pageable pageable) {
+    public MovieResponse getAll(@PageableDefault(page = 1, size = 2) Pageable pageable) {
         List<MovieDto> movies = movieService.getMovies(pageable);
-        long totalCount = movieService.getMovies().size();
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("movies", movies);
-        response.put("totalCount", totalCount);
-
-        return ResponseEntity.ok().body(response);
+        long totalCount = movieService.countMovies();
+        return MovieResponse.builder()
+                .movies(movies)
+                .totalCount(totalCount)
+                .build();
     }
 
     @GetMapping("/{id}")
