@@ -13,6 +13,10 @@ Used Technologies:
 - Docker
 - RabbitMQ for sending email reminders
 
+Getting Started:
+- docker-compose up
+- mvn spring-boot:run
+
 Endpoints:
 - "/movies": GET, POST, PUT, DELETE
 - "/user": GET, POST, PUT, DELETE
