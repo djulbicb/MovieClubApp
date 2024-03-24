@@ -1,6 +1,6 @@
 version: '3.3'
 services:
-  db:
+  mysqldb:
     image: mysql:latest
     restart: always
     environment:
@@ -17,15 +17,42 @@ services:
       # Where our data will be persisted
     volumes:
       - my-db:/var/lib/mysql
+    networks:
+      - springapimysql-net
+
   rabbitmq:
-    image: rabbitmq:3-management-alpine
+    image: rabbitmq:latest
     container_name: 'rabbitmq'
     ports:
       - 5672:5672
       - 15672:15672
     volumes:
       - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
-      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+      - ~/.docker-conf/rabbitmq/log/:/var/log/
+    networks:
+      - springapimysql-net
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 30s
+      retries: 3
+
+  movie-club:
+    image: movie-club-image
+    networks:
+      - springapimysql-net
+    environment:
+      - spring.datasource.url=jdbc:mysql://mysqldb:3306/db
+      - spring.rabbitmq.host=rabbitmq
+    depends_on:
+      mysqldb:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+    ports:
+      - 8080:8080
 # Names our volume
 volumes:
   my-db:
+networks:
+  springapimysql-net:

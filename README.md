@@ -15,7 +15,6 @@ Used Technologies:
 
 Getting Started:
 - docker-compose up
-- mvn spring-boot:run
 
 Endpoints:
 - "/movies": GET, POST, PUT, DELETE
