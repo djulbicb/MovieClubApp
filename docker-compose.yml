@@ -38,6 +38,7 @@ services:
       retries: 3
 
   movie-club:
+    build: .
     image: movie-club-image
     networks:
       - springapimysql-net

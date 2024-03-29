@@ -14,7 +14,7 @@ Used Technologies:
 - RabbitMQ for sending email reminders
 
 Getting Started:
-- docker-compose up
+- docker-compose up --build
 
 Endpoints:
 - "/movies": GET, POST, PUT, DELETE

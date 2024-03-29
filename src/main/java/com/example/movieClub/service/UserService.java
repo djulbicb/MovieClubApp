@@ -17,8 +17,8 @@ public class UserService {
 
     private final UserRepository userRepository;
     public User findLoggedInUser() {
-        return findUserById(3l);
-    }
+        return findUserById(3L);
+    } // todo: implement authorization
 
     public UserDto createUser(UserDto userDto) {
         User user = dtoToEntity(userDto);
