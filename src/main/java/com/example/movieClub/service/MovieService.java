@@ -33,9 +33,7 @@ public class MovieService {
 
     public List<MovieDto> getMovies() {
         List<Movie> movies = movieRepository.findAll();
-        List<MovieDto> movieDtoList = entitiesToDtos(movies);
-
-        return movieDtoList;
+        return entitiesToDtos(movies);
     }
 
     public List<MovieDto> getMovies(Pageable pageable) {
@@ -46,17 +44,18 @@ public class MovieService {
         return movieDtoList;
     }
 
-
     public MovieDto getMovieById(Long id){
         return entityToDto(findMovieById(id));
     }
 
-    private Movie findMovieById(Long id) {
-        return movieRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Movie with id = " + id + " not found"));
-    }
-
     public void deleteMovieById(Long id){
-        movieRepository.deleteById(id);
+        Movie movie = findMovieById(id);
+        if (!isRented(movie)) {
+            movieRepository.deleteById(id);
+        }
+        else {
+            throw new RuntimeException("Movie " + movie.getName() + " has a rented copy, it can not be deleted!");
+        }
     }
 
     public MovieDto createMovie(MovieDto movieDto){
@@ -106,6 +105,10 @@ public class MovieService {
         return movieRepository.count();
     }
 
+    private Movie findMovieById(Long id) {
+        return movieRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Movie with id = " + id + " not found"));
+    }
+
     private MovieCopy findAvailableCopy(Movie movie) {
         return movie.getMovieCopies().stream().filter(movieCopy -> isAvailable(movieCopy))
                 .findFirst().orElseThrow(() -> new NoAvailableCopiesException("There are no available copies for movie " + movie.getName()));
@@ -113,6 +116,10 @@ public class MovieService {
 
     private boolean isAvailable(MovieCopy movieCopy) {
         return movieCopy.getRentalDate() == null;
+    }
+
+    private boolean isRented(Movie movie) {
+        return movie.getMovieCopies().stream().anyMatch(movieCopy -> !isAvailable(movieCopy));
     }
 
 }
