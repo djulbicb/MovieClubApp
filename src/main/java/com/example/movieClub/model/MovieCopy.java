@@ -25,4 +25,6 @@ public class MovieCopy {
     private Movie movie;
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private User user;
+    @Version
+    private int version;
 }
