@@ -15,6 +15,9 @@ import java.time.LocalDate;
 @Builder
 @Table(name = "movie_copies")
 
+// Nemoj da koristis rec copy u naslovu klase.
+// Copy znaci gomilu stvari i nije dovoljno fokusirana rec
+// MovieRental ili tako nesto je bolje
 public class MovieCopy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

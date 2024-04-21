@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+// Vidim da ti se response klase zovu Response i Dto... Izaberi jedno ili drugo, nemoj oba
 public class MovieResponse {
 
     private List<MovieDto> movies;
