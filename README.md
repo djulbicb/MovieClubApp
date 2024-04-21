@@ -1,3 +1,5 @@
+Hello :)
+
 # MovieClubApp
 Movie club application for renting and returning movies.
 // Dodaj tipa screenshot aplikacije
